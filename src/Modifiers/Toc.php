@@ -19,17 +19,17 @@ final class Toc extends Modifier
         $service = app(TocService::class);
 
         $attributes = $this->extractAttributes($params);
-        $minLevel = isset($params[0]) ? (int) $params[0] : (int) config('statamic-toc.min_level', 1);
-        $maxLevel = isset($params[1]) ? (int) $params[1] : (int) config('statamic-toc.max_level', 6);
-        $preserve = isset($params[2]) ? filter_var((string) $params[2], FILTER_VALIDATE_BOOL) : (bool) config('statamic-toc.preserve_existing_ids', true);
+        $minLevel = isset($params[0]) ? $this->toInt($params[0], 1) : $this->toInt(config('statamic-toc.min_level', 1), 1);
+        $maxLevel = isset($params[1]) ? $this->toInt($params[1], 6) : $this->toInt(config('statamic-toc.max_level', 6), 6);
+        $preserve = isset($params[2]) ? $this->toBool($params[2], true) : $this->toBool(config('statamic-toc.preserve_existing_ids', true), true);
 
         if ($attributes !== []) {
-            $minLevel = (int) config('statamic-toc.min_level', 1);
-            $maxLevel = (int) config('statamic-toc.max_level', 6);
-            $preserve = (bool) config('statamic-toc.preserve_existing_ids', true);
+            $minLevel = $this->toInt(config('statamic-toc.min_level', 1), 1);
+            $maxLevel = $this->toInt(config('statamic-toc.max_level', 6), 6);
+            $preserve = $this->toBool(config('statamic-toc.preserve_existing_ids', true), true);
         }
 
-        return $service->injectIdsIntoHtml((string) $value, $minLevel, $maxLevel, $preserve, $attributes);
+        return $service->injectIdsIntoHtml($this->toString($value), $minLevel, $maxLevel, $preserve, $attributes);
     }
 
     /**
@@ -41,13 +41,58 @@ final class Toc extends Modifier
         $attributes = [];
 
         foreach ($params as $key => $value) {
-            if (! is_string($key) || is_array($value) || is_object($value) || $value === null) {
+            if (! is_string($key) || ! is_scalar($value)) {
                 continue;
             }
 
-            $attributes[$key] = (string) $value;
+            $attributes[$key] = $this->toString($value);
         }
 
         return $attributes;
+    }
+
+    private function toInt(mixed $value, int $default): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return $default;
+    }
+
+    private function toBool(mixed $value, bool $default): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_string($value) || is_int($value)) {
+            $result = filter_var($value, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+
+            return $result ?? $default;
+        }
+
+        return $default;
+    }
+
+    private function toString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 }

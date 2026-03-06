@@ -183,15 +183,58 @@ final class TocService
     }
 
     /**
-     * @param  array<string, mixed>  $row
+     * @param  array<mixed, mixed>  $row
      */
     private function mapRowToHeading(array $row): Heading
     {
+        $childrenRows = $row['children'] ?? [];
+        $mappedChildren = [];
+
+        if (is_array($childrenRows)) {
+            foreach ($childrenRows as $child) {
+                if (! is_array($child)) {
+                    continue;
+                }
+
+                $mappedChildren[] = $this->mapRowToHeading($child);
+            }
+        }
+
         return new Heading(
-            text: (string) $row['text'],
-            level: (int) $row['level'],
-            id: (string) $row['id'],
-            children: array_map(fn (array $child): Heading => $this->mapRowToHeading($child), $row['children'] ?? []),
+            text: $this->toString($row['text'] ?? ''),
+            level: $this->toInt($row['level'] ?? 0, 0),
+            id: $this->toString($row['id'] ?? ''),
+            children: $mappedChildren,
         );
+    }
+
+    private function toInt(mixed $value, int $default): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return $default;
+    }
+
+    private function toString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 }

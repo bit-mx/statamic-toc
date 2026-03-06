@@ -42,7 +42,7 @@ final class BardSource implements SourceExtractor
 
             $type = Arr::get($node, 'type');
             if ($type === 'heading') {
-                $level = (int) Arr::get($node, 'attrs.level', 2);
+                $level = $this->toInt(Arr::get($node, 'attrs.level', 2), 2);
                 if ($level >= $minLevel && $level <= $maxLevel) {
                     $text = trim($this->extractText($node));
                     if ($text !== '') {
@@ -94,5 +94,22 @@ final class BardSource implements SourceExtractor
         }
 
         return trim(implode(' ', $parts));
+    }
+
+    private function toInt(mixed $value, int $default): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return $default;
     }
 }

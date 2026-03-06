@@ -30,7 +30,7 @@ final class TocCache
 
     public function buildKey(string $source, mixed $content, int $minLevel, int $maxLevel, bool $tree): string
     {
-        $prefix = (string) config('statamic-toc.cache.prefix', 'statamic_toc');
+        $prefix = $this->toString(config('statamic-toc.cache.prefix', 'statamic_toc'), 'statamic_toc');
         $fingerprint = sha1(json_encode([
             'source' => $source,
             'content' => $content,
@@ -44,7 +44,7 @@ final class TocCache
 
     public function ttl(): int
     {
-        return max(1, (int) config('statamic-toc.cache.ttl', 600));
+        return max(1, $this->toInt(config('statamic-toc.cache.ttl', 600), 600));
     }
 
     private function resolveStore(): CacheRepository
@@ -56,5 +56,35 @@ final class TocCache
         }
 
         return Cache::store();
+    }
+
+    private function toInt(mixed $value, int $default): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return $default;
+    }
+
+    private function toString(mixed $value, string $default): string
+    {
+        if (is_string($value) && $value !== '') {
+            return $value;
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return $default;
     }
 }

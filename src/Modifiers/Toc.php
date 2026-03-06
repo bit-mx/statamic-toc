@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace BitMx\StatamicToc\Modifiers;
 
 use BitMx\StatamicToc\Toc\TocService;
+use Illuminate\Contracts\Support\Htmlable;
 use Statamic\Modifiers\Modifier;
+use Stringable;
 
 final class Toc extends Modifier
 {
@@ -87,6 +89,14 @@ final class Toc extends Modifier
     {
         if (is_string($value)) {
             return $value;
+        }
+
+        if ($value instanceof Htmlable) {
+            return $value->toHtml();
+        }
+
+        if ($value instanceof Stringable) {
+            return (string) $value;
         }
 
         if (is_scalar($value)) {

@@ -1,0 +1,18 @@
+{{ if items }}
+<nav aria-label="Table of contents" class="toc">
+  <ul>
+    {{ items }}
+      <li>
+        <a href="#{{ id }}">{{ text }}</a>
+        {{ if children }}
+          <ul>
+            {{ children }}
+              <li><a href="#{{ id }}">{{ text }}</a></li>
+            {{ /children }}
+          </ul>
+        {{ /if }}
+      </li>
+    {{ /items }}
+  </ul>
+</nav>
+{{ /if }}

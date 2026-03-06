@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 final class BardSourceTest extends TestCase
 {
-    public function testExtractsHeadingsFromNestedBardNodes(): void
+    public function test_extracts_headings_from_nested_bard_nodes(): void
     {
-        $source = new BardSource();
+        $source = new BardSource;
 
         $bard = [
             [

@@ -24,8 +24,8 @@ final class BardSource implements SourceExtractor
     }
 
     /**
-     * @param array<int|string, mixed> $nodes
-     * @param array<int, array{text: string, level: int}> $headings
+     * @param  array<int|string, mixed>  $nodes
+     * @param  array<int, array{text: string, level: int}>  $headings
      */
     private function walkNodes(array $nodes, array &$headings, int $minLevel, int $maxLevel): void
     {
@@ -36,6 +36,7 @@ final class BardSource implements SourceExtractor
 
             if (! array_key_exists('type', $node)) {
                 $this->walkNodes($node, $headings, $minLevel, $maxLevel);
+
                 continue;
             }
 
@@ -66,7 +67,7 @@ final class BardSource implements SourceExtractor
     }
 
     /**
-     * @param array<int|string, mixed> $node
+     * @param  array<int|string, mixed>  $node
      */
     private function extractText(array $node): string
     {

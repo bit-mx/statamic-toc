@@ -19,7 +19,7 @@ final class HtmlSource implements SourceExtractor
             return [];
         }
 
-        $document = new DOMDocument();
+        $document = new DOMDocument;
         @$document->loadHTML('<?xml encoding="UTF-8">'.$content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $headings = [];

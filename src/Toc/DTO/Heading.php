@@ -7,15 +7,14 @@ namespace BitMx\StatamicToc\Toc\DTO;
 final class Heading
 {
     /**
-     * @param array<int, Heading> $children
+     * @param  array<int, Heading>  $children
      */
     public function __construct(
         public readonly string $text,
         public readonly int $level,
         public readonly string $id,
         public readonly array $children = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, mixed>

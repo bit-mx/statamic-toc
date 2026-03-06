@@ -9,7 +9,11 @@ use Statamic\Modifiers\Modifier;
 
 final class Toc extends Modifier
 {
-    public function index($value, $params, $context)
+    /**
+     * @param  array<int|string, mixed>  $params
+     * @param  array<int|string, mixed>  $context
+     */
+    public function index(mixed $value, array $params, array $context): string
     {
         /** @var TocService $service */
         $service = app(TocService::class);
@@ -29,7 +33,7 @@ final class Toc extends Modifier
     }
 
     /**
-     * @param array<int|string, mixed> $params
+     * @param  array<int|string, mixed>  $params
      * @return array<string, string>
      */
     private function extractAttributes(array $params): array

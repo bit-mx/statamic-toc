@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Cache;
 
 final class TocCache
 {
+    /**
+     * @template TCacheValue
+     *
+     * @param  Closure(): TCacheValue  $callback
+     * @return TCacheValue
+     */
     public function remember(string $key, int $ttl, Closure $callback): mixed
     {
         $cache = $this->resolveStore();

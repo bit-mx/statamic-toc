@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 final class AnchorGeneratorTest extends TestCase
 {
-    public function testGeneratesUniqueAnchorsForDuplicates(): void
+    public function test_generates_unique_anchors_for_duplicates(): void
     {
-        $generator = new AnchorGenerator();
+        $generator = new AnchorGenerator;
 
         self::assertSame('intro', $generator->generate('Intro'));
         self::assertSame('intro-2', $generator->generate('Intro'));

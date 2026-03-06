@@ -1,1 +1,4 @@
 vendor
+.phpunit.result.cache
+.tmp-*.json
+.phpunit.result.cache

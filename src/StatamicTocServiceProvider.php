@@ -9,20 +9,23 @@ use BitMx\StatamicToc\Tags\Toc as TocTag;
 use BitMx\StatamicToc\Toc\AnchorGenerator;
 use BitMx\StatamicToc\Toc\Cache\TocCache;
 use BitMx\StatamicToc\Toc\TocService;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Blade;
+use Statamic\Modifiers\Modifier;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Tags\Tags;
 
 final class StatamicTocServiceProvider extends AddonServiceProvider
 {
     /**
-     * @var array<int, class-string>
+     * @var list<class-string<Tags>>
      */
     protected $tags = [
         TocTag::class,
     ];
 
     /**
-     * @var array<int, class-string>
+     * @var list<class-string<Modifier>>
      */
     protected $modifiers = [
         TocModifier::class,
@@ -32,10 +35,10 @@ final class StatamicTocServiceProvider extends AddonServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/statamic-toc.php', 'statamic-toc');
 
-        $this->app->singleton(AnchorGenerator::class, static fn (): AnchorGenerator => new AnchorGenerator());
-        $this->app->singleton(TocCache::class, static fn (): TocCache => new TocCache());
+        $this->app->singleton(AnchorGenerator::class, static fn (): AnchorGenerator => new AnchorGenerator);
+        $this->app->singleton(TocCache::class, static fn (): TocCache => new TocCache);
 
-        $this->app->singleton('statamic-toc', function ($app): TocService {
+        $this->app->singleton('statamic-toc', function (Container $app): TocService {
             return new TocService($app->make(AnchorGenerator::class));
         });
 

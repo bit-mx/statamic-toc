@@ -6,7 +6,6 @@ namespace BitMx\StatamicToc\Tags;
 
 use BitMx\StatamicToc\Toc\Cache\TocCache;
 use BitMx\StatamicToc\Toc\TocService;
-use Illuminate\Support\Collection;
 use Statamic\Tags\Concerns\OutputsItems;
 use Statamic\Tags\Tags;
 
@@ -14,9 +13,10 @@ final class Toc extends Tags
 {
     use OutputsItems;
 
+    /** @var string */
     protected static $handle = 'toc';
 
-    public function index()
+    public function index(): mixed
     {
         /** @var TocService $service */
         $service = app(TocService::class);
@@ -43,7 +43,7 @@ final class Toc extends Tags
         }
 
         if ($content === null) {
-            return $this->output(collect());
+            return $this->output([]);
         }
 
         $resolvedContent = $this->resolveContentValue($content);
@@ -62,7 +62,7 @@ final class Toc extends Tags
 
         $legacy = $this->mapToLegacyShape($items);
 
-        return $this->output(Collection::make($legacy));
+        return $this->output($legacy);
     }
 
     public function count(): int
@@ -76,13 +76,13 @@ final class Toc extends Tags
         return is_array($result) ? count($result) : 0;
     }
 
-    public function items()
+    public function items(): mixed
     {
         return $this->index();
     }
 
     /**
-     * @param array<int, array<string, mixed>> $items
+     * @param  array<int, array<string, mixed>>  $items
      * @return array<int, array<string, mixed>>
      */
     private function mapToLegacyShape(array $items): array
@@ -103,7 +103,7 @@ final class Toc extends Tags
     }
 
     /**
-     * @param array<string, mixed> $item
+     * @param  array<string, mixed>  $item
      * @return array<string, mixed>
      */
     private function mapChild(array $item): array

@@ -18,13 +18,12 @@ use InvalidArgumentException;
 final class TocService
 {
     /**
-     * @param array<string, SourceExtractor> $extractors
+     * @param  array<string, SourceExtractor>  $extractors
      */
     public function __construct(
         private readonly AnchorGenerator $anchorGenerator,
         private readonly array $extractors = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<int, Heading>
@@ -62,7 +61,7 @@ final class TocService
     }
 
     /**
-     * @param array<int, Heading> $headings
+     * @param  array<int, Heading>  $headings
      * @return array<int, Heading>
      */
     public function toTree(array $headings): array
@@ -86,6 +85,7 @@ final class TocService
                 $result[] = $node;
                 $stack[] = &$result[array_key_last($result)];
                 unset($node);
+
                 continue;
             }
 
@@ -99,7 +99,7 @@ final class TocService
     }
 
     /**
-     * @param array<string, string> $attributes
+     * @param  array<string, string>  $attributes
      */
     public function injectIdsIntoHtml(string $html, int $minLevel = 1, int $maxLevel = 6, bool $preserveExisting = true, array $attributes = []): string
     {
@@ -111,7 +111,7 @@ final class TocService
 
         $this->anchorGenerator->reset();
 
-        $document = new DOMDocument();
+        $document = new DOMDocument;
         @$document->loadHTML('<?xml encoding="UTF-8">'.$html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $xpath = new DOMXPath($document);
@@ -128,7 +128,7 @@ final class TocService
                 continue;
             }
 
-            $existingId = $node->attributes?->getNamedItem('id')?->nodeValue;
+            $existingId = $node->attributes->getNamedItem('id')?->nodeValue;
             if ($preserveExisting && is_string($existingId) && $existingId !== '') {
                 continue;
             }
@@ -160,9 +160,9 @@ final class TocService
     private function defaultExtractor(string $source): SourceExtractor
     {
         return match ($source) {
-            'html' => new HtmlSource(),
-            'markdown' => new MarkdownSource(),
-            'bard' => new BardSource(),
+            'html' => new HtmlSource,
+            'markdown' => new MarkdownSource,
+            'bard' => new BardSource,
             default => throw new InvalidArgumentException("Unsupported TOC source [{$source}]."),
         };
     }
@@ -183,7 +183,7 @@ final class TocService
     }
 
     /**
-     * @param array<string, mixed> $row
+     * @param  array<string, mixed>  $row
      */
     private function mapRowToHeading(array $row): Heading
     {

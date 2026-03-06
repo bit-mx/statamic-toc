@@ -10,9 +10,9 @@ use PHPUnit\Framework\TestCase;
 
 final class TocServiceTest extends TestCase
 {
-    public function testExtractsMarkdownHeadings(): void
+    public function test_extracts_markdown_headings(): void
     {
-        $service = new TocService(new AnchorGenerator());
+        $service = new TocService(new AnchorGenerator);
 
         $items = $service->extractAsArray('markdown', "# Intro\n\n## Setup\n\n## Usage", 1, 6, false);
 
@@ -22,9 +22,9 @@ final class TocServiceTest extends TestCase
         self::assertSame(2, $items[1]['level']);
     }
 
-    public function testBuildsTreeStructure(): void
+    public function test_builds_tree_structure(): void
     {
-        $service = new TocService(new AnchorGenerator());
+        $service = new TocService(new AnchorGenerator);
 
         $items = $service->extractAsArray('markdown', "# Intro\n\n## Setup\n\n### Install\n\n## Usage", 1, 6, true);
 
@@ -34,9 +34,9 @@ final class TocServiceTest extends TestCase
         self::assertCount(1, $items[0]['children'][0]['children']);
     }
 
-    public function testInjectsIdsIntoHtml(): void
+    public function test_injects_ids_into_html(): void
     {
-        $service = new TocService(new AnchorGenerator());
+        $service = new TocService(new AnchorGenerator);
 
         $html = '<h1>Intro</h1><h2>Setup</h2>';
         $result = $service->injectIdsIntoHtml($html);
